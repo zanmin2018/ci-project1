@@ -48,32 +48,5 @@ pipeline{
                 sh 'mvn verify -DskipUnitTest'
             }
         }
-        stage('UPLOAD ARTIFACT TO NEXUS'){
-            steps{
-                nexusArtifactUploader{
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl:"${NEXUS_IP}:${NEXUS_PORT}",
-                    groupId: 'QA',
-                    version: "${env.BUILD_ID}-${env.BUILD_TIMESTAMP}",
-                    repository: "${RELEASE_REPO}",
-                    credentialsld: "${NEXUS_LOGIN}",
-                    artifacts[
-                        [artifact:'vproapp',
-                        classifier:"",
-                        file:'target/vprofile-v2.war',
-                        type:'war']
-                    ]
-                }
-            }
-        }
-    }
-    post {
-        always{
-            echo 'slack notifications'
-            slackSend channel: '#ci-project',
-            color: COLOR_MAP[currentBuild.currentResult],
-            message: "*${currentBuild.currentResult}:* Job name ${env.JOB_NAME} build ${env.BUILD_NUMBER} time ${env.BUILD_TIMESTAMP} \n More info at: ${BUILD_URL}"
-        }
     }
 }
