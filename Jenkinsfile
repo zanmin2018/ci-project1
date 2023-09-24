@@ -12,30 +12,12 @@ pipeline{
         }
         stage ('BUILD THE APPLICATION') {
             steps {
-                sh 'mvn -s settings.xml install -DskipTests' 
-            }
-            post {
-                success{
-                    echo 'New achiving'
-                    archiveArtifacts artifacts: '**/*.war'
-                }
+                sh 'mvn install -DskipTests' 
             }
         }
         stage ('TEST') {
             steps {
                 sh ' mvn test'
-            }
-            post{
-                success {
-                    slackSend channel: '#ci-project',
-                    color:'good',
-                    message: "TEST IS SUCCESS"
-                }
-                failure {
-                    slackSend channel: '#ci-project',
-                    color: 'danger',
-                    message: "TEST IS FAILED"
-                }
             }
         }
         stage ('UNIT TEST') {
