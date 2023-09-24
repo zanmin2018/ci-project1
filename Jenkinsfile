@@ -2,7 +2,7 @@ pipeline{
     agent any
     tools {
         jdk 'JDK'
-        maven 'maven 1'
+        maven 'Maven 1'
     }
     stages {
         stage ('PULL THE APPLICATION FROM GITHUB') {
